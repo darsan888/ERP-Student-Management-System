@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ERP Student Management System | Login</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body class="login-body">
+    <div class="login-wrapper">
+        <div class="login-card shadow-lg">
+            <div class="login-brand">
+                <i class="fa-solid fa-graduation-cap"></i>
+                <h3>Campus<span>ERP</span></h3>
+                <p class="text-muted">Integrated Student Management System</p>
+            </div>
+
+            <div th:if="${param.error}" class="alert alert-danger py-2">
+                Invalid username or password.
+            </div>
+            <div th:if="${param.logout}" class="alert alert-success py-2">
+                You have been logged out successfully.
+            </div>
+
+            <form th:action="@{/login}" method="post">
+                <div class="mb-3">
+                    <label class="form-label">Username</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fa-solid fa-user"></i></span>
+                        <input type="text" name="username" class="form-control" placeholder="Enter username" required autofocus>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Password</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fa-solid fa-lock"></i></span>
+                        <input type="password" name="password" class="form-control" placeholder="Enter password" required>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary w-100 py-2 mt-2">
+                    <i class="fa-solid fa-right-to-bracket me-1"></i> Sign In
+                </button>
+            </form>
+
+            <div class="login-demo-creds mt-4">
+                <p class="mb-1 fw-semibold small text-muted">Demo credentials:</p>
+                <div class="small text-muted">
+                    <div>Admin &nbsp;&nbsp;: admin / Admin@123</div>
+                    <div>Faculty : faculty1 / Faculty@123</div>
+                    <div>Student : student1 / Student@123</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

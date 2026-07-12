@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fees | CampusERP</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="app-shell">
+    <div th:replace="~{fragments/student-sidebar :: sidebar('fees')}"></div>
+    <div class="main-content">
+        <div class="topbar">
+            <h5>Fees</h5>
+            <div class="d-flex align-items-center gap-3">
+                <span class="text-muted small" th:text="${student.registerNumber}">REG</span>
+                <form th:action="@{/logout}" method="post" class="mb-0">
+                    <button class="btn btn-sm btn-outline-danger" type="submit"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
+                </form>
+            </div>
+        </div>
+        <div class="content-area">
+            <ul class="nav nav-tabs mb-3" id="feeTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#pay-tab" type="button"><i class="fa-solid fa-credit-card"></i> Pay Fees</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#receipt-tab" type="button"><i class="fa-solid fa-receipt"></i> Fee Receipt</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#balance-tab" type="button"><i class="fa-solid fa-wallet"></i> Check Balance</button>
+                </li>
+            </ul>
+
+            <div class="tab-content">
+                <!-- Pay Fees -->
+                <div class="tab-pane fade show active" id="pay-tab" role="tabpanel">
+                    <div class="panel">
+                        <h6 class="fw-bold mb-3">Pending Fees</h6>
+                        <table class="table table-hover align-middle">
+                            <thead><tr><th>Semester</th><th>Total Amount</th><th>Paid So Far</th><th>Due Date</th><th>Status</th><th></th></tr></thead>
+                            <tbody>
+                            <tr th:each="f : ${pendingFees}">
+                                <td th:text="${f.semester != null ? f.semester.semesterNumber : '-'}">1</td>
+                                <td th:text="${f.totalAmount}">0</td>
+                                <td th:text="${f.paidAmount}">0</td>
+                                <td th:text="${f.dueDate}">-</td>
+                                <td><span class="badge bg-danger" th:text="${f.status}">PENDING</span></td>
+                                <td>
+                                    <form th:action="@{'/student/fees/' + ${f.feeId} + '/pay'}" method="post" class="mb-0"
+                                          onsubmit="return confirm('Pay the full remaining amount for this fee record?');">
+                                        <button class="btn btn-sm btn-success" type="submit"><i class="fa-solid fa-credit-card"></i> Pay Now</button>
+                                    </form>
+                                </td>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(pendingFees)}">
+                                <td colspan="6" class="text-muted text-center">No pending fees — you're all paid up!</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <p class="text-muted small mb-0">This is a demo payment flow — clicking "Pay Now" marks the fee as fully paid and generates a receipt number, without an actual payment gateway.</p>
+                    </div>
+                </div>
+
+                <!-- Fee Receipt -->
+                <div class="tab-pane fade" id="receipt-tab" role="tabpanel">
+                    <div class="panel">
+                        <h6 class="fw-bold mb-3">Paid Fees / Receipts</h6>
+                        <table class="table table-hover align-middle">
+                            <thead><tr><th>Semester</th><th>Amount Paid</th><th>Paid Date</th><th>Receipt No.</th><th></th></tr></thead>
+                            <tbody>
+                            <tr th:each="f : ${paidFees}">
+                                <td th:text="${f.semester != null ? f.semester.semesterNumber : '-'}">1</td>
+                                <td th:text="${f.paidAmount}">0</td>
+                                <td th:text="${f.paidDate}">-</td>
+                                <td th:text="${f.receiptNumber}">-</td>
+                                <td>
+                                    <a class="btn btn-sm btn-outline-primary" target="_blank" th:href="@{'/student/fees/receipt/' + ${f.feeId}}"><i class="fa-solid fa-print"></i> View / Print</a>
+                                </td>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(paidFees)}">
+                                <td colspan="5" class="text-muted text-center">No paid fees yet.</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Check Balance -->
+                <div class="tab-pane fade" id="balance-tab" role="tabpanel">
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-4">
+                            <div class="stat-card bg-rose">
+                                <i class="fa-solid fa-triangle-exclamation bg-icon"></i>
+                                <div class="label">Total Due</div>
+                                <h2 th:text="${totalDue}">0</h2>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="stat-card bg-green">
+                                <i class="fa-solid fa-circle-check bg-icon"></i>
+                                <div class="label">Total Paid</div>
+                                <h2 th:text="${totalPaid}">0</h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel">
+                        <h6 class="fw-bold mb-3">Fee Record Breakdown</h6>
+                        <table class="table table-hover align-middle">
+                            <thead><tr><th>Semester</th><th>Total</th><th>Paid</th><th>Balance</th><th>Status</th></tr></thead>
+                            <tbody>
+                            <tr th:each="f : ${fees}">
+                                <td th:text="${f.semester != null ? f.semester.semesterNumber : '-'}">1</td>
+                                <td th:text="${f.totalAmount}">0</td>
+                                <td th:text="${f.paidAmount}">0</td>
+                                <td th:text="${f.totalAmount - f.paidAmount}">0</td>
+                                <td>
+                                    <span class="badge" th:classappend="${f.status.name() == 'PAID'} ? 'bg-success' : 'bg-danger'" th:text="${f.status}">PENDING</span>
+                                </td>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(fees)}">
+                                <td colspan="5" class="text-muted text-center">No fee records found.</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

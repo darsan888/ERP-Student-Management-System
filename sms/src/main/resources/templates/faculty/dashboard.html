@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faculty Dashboard | CampusERP</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="app-shell">
+    <div class="sidebar">
+        <div class="brand">
+            <i class="fa-solid fa-graduation-cap"></i>
+            <span>CampusERP</span>
+        </div>
+
+        <div class="nav flex-column">
+
+            <div class="nav-section-title">MAIN</div>
+
+            <a class="nav-link active" th:href="@{/faculty/dashboard}">
+                <i class="fa-solid fa-gauge"></i>
+                <span>Dashboard</span>
+            </a>
+
+            <a class="nav-link" th:href="@{/faculty/attendance}">
+                <i class="fa-solid fa-clipboard-check"></i>
+                <span>Take Attendance</span>
+            </a>
+
+            <a class="nav-link" th:href="@{/faculty/marks}">
+                <i class="fa-solid fa-pen"></i>
+                <span>Upload Marks</span>
+            </a>
+
+            <a class="nav-link" th:href="@{/faculty/assignments}">
+                <i class="fa-solid fa-file-arrow-up"></i>
+                <span>Assignments</span>
+            </a>
+
+            <a class="nav-link" th:href="@{/faculty/leaves}">
+                <i class="fa-solid fa-envelope-open-text"></i>
+                <span>Leave Requests</span>
+            </a>
+
+            <div class="nav-section-title">INSIGHTS</div>
+
+            <a class="nav-link" th:href="@{/faculty/notifications}">
+                <i class="fa-solid fa-bell"></i>
+                <span>Send Notification</span>
+            </a>
+
+            <a class="nav-link" th:href="@{/faculty/reports}">
+                <i class="fa-solid fa-file-lines"></i>
+                <span>Reports</span>
+            </a>
+
+        </div>
+    </div>
+    <div class="main-content">
+        <div class="topbar">
+            <h5 th:text="${'Welcome, ' + faculty.fullName}">Faculty Dashboard</h5>
+            <div class="d-flex align-items-center gap-3">
+                <span class="text-muted small" th:text="${faculty.designation}">Designation</span>
+                <form th:action="@{/logout}" method="post" class="mb-0">
+                    <button class="btn btn-sm btn-outline-danger" type="submit">
+                        <i class="fa-solid fa-right-from-bracket"></i> Logout
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <div class="content-area">
+            <div class="row g-3 mb-4">
+                <div class="col-md-4">
+                    <div class="stat-card bg-indigo">
+                        <i class="fa-solid fa-layer-group bg-icon"></i>
+                        <div class="label">Assigned Subjects</div>
+                        <h2 th:text="${#lists.size(assignedSubjects)}">0</h2>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="stat-card bg-amber">
+                        <i class="fa-solid fa-envelope-open-text bg-icon"></i>
+                        <div class="label">Pending Leave Approvals</div>
+                        <h2 th:text="${#lists.size(pendingLeaves)}">0</h2>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="stat-card bg-green">
+                        <i class="fa-solid fa-file-arrow-up bg-icon"></i>
+                        <div class="label">Assignments Created</div>
+                        <h2 th:text="${#lists.size(myAssignments)}">0</h2>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <div class="panel">
+                        <h6 class="fw-bold mb-3">My Subjects</h6>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item d-flex justify-content-between" th:each="fs : ${assignedSubjects}">
+                                <span th:text="${fs.subject.subjectName}">Subject</span>
+                                <span class="badge bg-secondary" th:text="${fs.subject.subjectCode}">CODE</span>
+                            </li>
+                            <li class="list-group-item text-muted" th:if="${#lists.isEmpty(assignedSubjects)}">
+                                No subjects assigned yet.
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="panel">
+                        <h6 class="fw-bold mb-3">Pending Leave Requests</h6>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item" th:each="lr : ${pendingLeaves}">
+                                <div class="fw-semibold small" th:text="${lr.student.fullName}">Student</div>
+                                <div class="text-muted small" th:text="${lr.reason}">Reason</div>
+                            </li>
+                            <li class="list-group-item text-muted" th:if="${#lists.isEmpty(pendingLeaves)}">
+                                No pending leave requests.
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

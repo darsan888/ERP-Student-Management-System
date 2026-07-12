@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile | CampusERP</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="app-shell">
+    <div th:replace="~{fragments/student-sidebar :: sidebar('profile')}"></div>
+    <div class="main-content">
+        <div class="topbar">
+            <h5>My Profile</h5>
+            <div class="d-flex align-items-center gap-3">
+                <form th:action="@{/logout}" method="post" class="mb-0">
+                    <button class="btn btn-sm btn-outline-danger" type="submit"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
+                </form>
+            </div>
+        </div>
+        <div class="content-area">
+            <div class="panel">
+                <h6 class="fw-bold mb-3">Personal Details</h6>
+                <table class="table">
+                    <tbody>
+                    <tr><th style="width:220px;">Full Name</th><td th:text="${student.fullName}">-</td></tr>
+                    <tr><th>Register Number</th><td th:text="${student.registerNumber}">-</td></tr>
+                    <tr><th>Department</th><td th:text="${student.department != null ? student.department.departmentName : '-'}">-</td></tr>
+                    <tr><th>Current Semester</th><td th:text="${student.currentSemester != null ? student.currentSemester.semesterNumber : '-'}">-</td></tr>
+                    <tr><th>Date of Birth</th><td th:text="${student.dateOfBirth} ?: '-'">-</td></tr>
+                    <tr><th>Gender</th><td th:text="${student.gender} ?: '-'">-</td></tr>
+                    <tr><th>Phone</th><td th:text="${student.phone} ?: '-'">-</td></tr>
+                    <tr><th>Address</th><td th:text="${student.address} ?: '-'">-</td></tr>
+                    <tr><th>Admission Year</th><td th:text="${student.admissionYear} ?: '-'">-</td></tr>
+                    <tr><th>Guardian Name</th><td th:text="${student.guardianName} ?: '-'">-</td></tr>
+                    <tr><th>Guardian Phone</th><td th:text="${student.guardianPhone} ?: '-'">-</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard | CampusERP</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="app-shell">
+    <div th:replace="~{fragments/student-sidebar :: sidebar('dashboard')}"></div>
+
+    <div class="main-content">
+        <div class="topbar">
+            <h5 th:text="${'Welcome, ' + student.fullName}">Student Dashboard</h5>
+            <div class="d-flex align-items-center gap-3">
+                <span class="text-muted small" th:text="${student.registerNumber}">REG</span>
+                <form th:action="@{/logout}" method="post" class="mb-0">
+                    <button class="btn btn-sm btn-outline-danger" type="submit">
+                        <i class="fa-solid fa-right-from-bracket"></i> Logout
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <div class="content-area">
+            <!-- Student Health Dashboard -->
+            <div class="row g-3 mb-4">
+                <div class="col-md-3">
+                    <div class="stat-card bg-indigo">
+                        <i class="fa-solid fa-calendar-check bg-icon"></i>
+                        <div class="label">Attendance</div>
+                        <h2 th:text="${health.attendancePercentage} + '%'">0%</h2>
+                        <span class="risk-badge"
+                              th:classappend="${health.attendanceRisk.name() == 'GREEN'} ? 'risk-green' : (${health.attendanceRisk.name() == 'YELLOW'} ? 'risk-yellow' : 'risk-red')"
+                              th:text="${health.attendanceRisk}">GREEN</span>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-card bg-green">
+                        <i class="fa-solid fa-chart-simple bg-icon"></i>
+                        <div class="label">Average Marks</div>
+                        <h2 th:text="${health.averageMarks} + '%'">0%</h2>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-card bg-amber">
+                        <i class="fa-solid fa-file-invoice-dollar bg-icon"></i>
+                        <div class="label">Fees Pending</div>
+                        <h2 th:text="'₹' + ${health.feesPending}">₹0</h2>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-card bg-rose">
+                        <i class="fa-solid fa-umbrella-beach bg-icon"></i>
+                        <div class="label">Leave Balance</div>
+                        <h2 th:text="${health.leaveBalance}">0</h2>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row g-3">
+                <div class="col-md-5">
+                    <div class="panel text-center">
+                        <h6 class="fw-bold mb-3">Overall Academic Score</h6>
+                        <canvas id="scoreGauge" height="180"></canvas>
+                        <p class="mt-2 mb-0">
+                            AI Prediction:
+                            <span class="fw-bold" th:text="${health.performanceCategory}">EXCELLENT</span>
+                        </p>
+                    </div>
+                </div>
+                <div class="col-md-7">
+                    <div class="panel">
+                        <h6 class="fw-bold mb-3">Semester Progress Timeline</h6>
+                        <canvas id="timelineChart" height="140"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row g-3 mt-1">
+                <div class="col-md-6">
+                    <div class="panel">
+                        <h6 class="fw-bold mb-3">Assignments</h6>
+                        <div class="d-flex justify-content-between mb-1">
+                            <span>Submitted</span>
+                            <span th:text="${health.assignmentsSubmitted} + ' / ' + ${health.assignmentsAssigned}">0 / 0</span>
+                        </div>
+                        <div class="progress">
+                            <div class="progress-bar bg-success" role="progressbar"
+                                 th:style="'width:' + (${health.assignmentsAssigned} > 0 ? (${health.assignmentsSubmitted} * 100 / ${health.assignmentsAssigned}) : 100) + '%'">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="panel">
+                        <h6 class="fw-bold mb-3">Quick Actions</h6>
+                        <div class="d-flex gap-2 flex-wrap">
+                            <a th:href="@{/student/leaves}" class="btn btn-sm btn-outline-primary"><i class="fa-solid fa-envelope"></i> Apply Leave</a>
+                            <a th:href="@{/student/profile}" class="btn btn-sm btn-outline-success"><i class="fa-solid fa-id-card"></i> Hall Ticket</a>
+                            <a th:href="@{/student/fees}" class="btn btn-sm btn-outline-warning"><i class="fa-solid fa-file-invoice-dollar"></i> Fee Receipt</a>
+                            <a th:href="@{/student/assignments}" class="btn btn-sm btn-outline-secondary"><i class="fa-solid fa-file-arrow-up"></i> Submit Assignment</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.4/chart.umd.min.js"></script>
+<script th:inline="javascript">
+    const overallScore = /*[[${health.overallScore}]]*/ 0;
+
+    new Chart(document.getElementById('scoreGauge'), {
+        type: 'doughnut',
+        data: {
+            labels: ['Score', 'Remaining'],
+            datasets: [{
+                data: [overallScore, 100 - overallScore],
+                backgroundColor: ['#4f46e5', '#e5e7eb'],
+                borderWidth: 0
+            }]
+        },
+        options: {
+            cutout: '75%',
+            plugins: { legend: { display: false }, tooltip: { enabled: false } }
+        }
+    });
+
+    new Chart(document.getElementById('timelineChart'), {
+        type: 'line',
+        data: {
+            labels: ['Sem 1', 'Sem 2', 'Sem 3'],
+            datasets: [{
+                label: 'GPA',
+                data: [7.2, 7.8, 8.1],
+                borderColor: '#4f46e5',
+                backgroundColor: 'rgba(79,70,229,0.15)',
+                fill: true,
+                tension: 0.35
+            }]
+        },
+        options: { responsive: true, plugins: { legend: { display: false } } }
+    });
+</script>
+</body>
+</html>

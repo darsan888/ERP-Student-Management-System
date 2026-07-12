@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reports | CampusERP</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="app-shell">
+    <div th:replace="~{fragments/faculty-sidebar :: sidebar('reports')}"></div>
+    <div class="main-content">
+        <div class="topbar">
+            <h5>Reports</h5>
+            <form th:action="@{/logout}" method="post" class="mb-0">
+                <button class="btn btn-sm btn-outline-danger" type="submit"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
+            </form>
+        </div>
+        <div class="content-area">
+            <div class="panel">
+                <h6 class="fw-bold mb-3">Generate Reports</h6>
+                <div class="list-group">
+                    <div class="list-group-item d-flex justify-content-between align-items-center" th:each="fs : ${assignedSubjects}">
+                        <span th:text="${fs.subject.subjectName}">Subject</span>
+                        <a class="btn btn-sm btn-outline-primary" target="_blank" th:href="@{'/faculty/reports/export/' + ${fs.subject.subjectId}}"><i class="fa-solid fa-file-export"></i> Export</a>
+                    </div>
+                    <div class="list-group-item text-muted text-center" th:if="${#lists.isEmpty(assignedSubjects)}">No subjects assigned yet.</div>
+                </div>
+                <p class="text-muted small mt-3">Export opens a print-ready marks report in a new tab — use your browser's Print (Ctrl/Cmd+P) and choose "Save as PDF" to download it.</p>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

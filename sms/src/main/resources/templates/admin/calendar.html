@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Academic Calendar | CampusERP</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <style>
+        .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
+        .cal-head { font-weight: 600; font-size: 12px; text-transform: uppercase; color: #6b7280; text-align: center; padding: 4px 0; }
+        .cal-cell { min-height: 90px; border: 1px solid #e5e7eb; border-radius: 8px; padding: 6px; background: #fff; }
+        .cal-cell.empty { background: #f9fafb; border: 1px dashed #e5e7eb; }
+        .cal-day-num { font-weight: 600; font-size: 13px; margin-bottom: 4px; }
+        .cal-event { font-size: 11px; padding: 2px 6px; border-radius: 5px; margin-bottom: 2px; color: #fff; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .cal-event.HOLIDAY { background: #f43f5e; }
+        .cal-event.EXAM { background: #6366f1; }
+        .cal-event.EVENT { background: #22c55e; }
+        .cal-event.DEADLINE { background: #f59e0b; }
+    </style>
+</head>
+<body>
+<div class="app-shell">
+    <div th:replace="~{fragments/admin-sidebar :: sidebar('calendar')}"></div>
+    <div class="main-content">
+        <div class="topbar">
+            <h5>Academic Calendar</h5>
+            <form th:action="@{/logout}" method="post" class="mb-0">
+                <button class="btn btn-sm btn-outline-danger" type="submit"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
+            </form>
+        </div>
+        <div class="content-area">
+            <div class="panel mb-4">
+                <h6 class="fw-bold mb-3">Add Event</h6>
+                <form th:action="@{/admin/calendar/add}" method="post" class="row g-3">
+                    <div class="col-md-4">
+                        <label class="form-label">Title</label>
+                        <input type="text" name="title" class="form-control" required>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Date</label>
+                        <input type="date" name="eventDate" class="form-control" required>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">Type</label>
+                        <select name="eventType" class="form-select" required>
+                            <option value="EVENT">Event</option>
+                            <option value="HOLIDAY">Holiday</option>
+                            <option value="EXAM">Exam</option>
+                            <option value="DEADLINE">Deadline</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Description</label>
+                        <input type="text" name="description" class="form-control">
+                    </div>
+                    <div class="col-12">
+                        <button class="btn btn-primary" type="submit"><i class="fa-solid fa-plus"></i> Add Event</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="panel mb-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <a class="btn btn-sm btn-outline-secondary" th:href="@{/admin/calendar(year=${prevYear},month=${prevMonth})}"><i class="fa-solid fa-chevron-left"></i> Prev</a>
+                    <h6 class="fw-bold mb-0" th:text="${monthLabel}">Month Year</h6>
+                    <a class="btn btn-sm btn-outline-secondary" th:href="@{/admin/calendar(year=${nextYear},month=${nextMonth})}">Next <i class="fa-solid fa-chevron-right"></i></a>
+                </div>
+                <div class="cal-grid">
+                    <div class="cal-head">Sun</div><div class="cal-head">Mon</div><div class="cal-head">Tue</div>
+                    <div class="cal-head">Wed</div><div class="cal-head">Thu</div><div class="cal-head">Fri</div><div class="cal-head">Sat</div>
+
+                    <div class="cal-cell empty" th:each="b : ${#numbers.sequence(1, leadingBlanks)}"></div>
+
+                    <div class="cal-cell" th:each="d : ${#numbers.sequence(1, daysInMonth)}">
+                        <div class="cal-day-num" th:text="${d}">1</div>
+                        <span class="cal-event" th:each="e : ${monthEvents}"
+                              th:if="${e.eventDate.dayOfMonth == d}"
+                              th:classappend="${e.eventType}"
+                              th:text="${e.title}" th:title="${e.title}">Event</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel">
+                <h6 class="fw-bold mb-3">All Events</h6>
+                <table class="table table-hover align-middle">
+                    <thead><tr><th>Title</th><th>Type</th><th>Date</th><th>Description</th></tr></thead>
+                    <tbody>
+                    <tr th:each="e : ${allEvents}">
+                        <td th:text="${e.title}">Title</td>
+                        <td><span class="badge bg-info text-dark" th:text="${e.eventType}">EVENT</span></td>
+                        <td th:text="${e.eventDate}">-</td>
+                        <td th:text="${e.description} ?: '-'">-</td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(allEvents)}">
+                        <td colspan="4" class="text-muted text-center">No events scheduled.</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

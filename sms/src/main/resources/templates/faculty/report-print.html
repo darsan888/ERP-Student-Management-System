@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${subject.subjectName} + ' Report | CampusERP'">Report</title>
+    <style>
+        body { font-family: Arial, Helvetica, sans-serif; color: #111; margin: 40px; }
+        h1 { font-size: 22px; margin-bottom: 0; }
+        .subtitle { color: #666; margin-top: 4px; margin-bottom: 24px; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 28px; }
+        th, td { border: 1px solid #ccc; padding: 8px 10px; text-align: left; font-size: 13px; }
+        th { background: #f3f4f6; }
+        .print-bar { margin-bottom: 20px; }
+        @media print { .print-bar { display: none; } }
+    </style>
+</head>
+<body>
+<div class="print-bar">
+    <button onclick="window.print()">Print / Save as PDF</button>
+</div>
+
+<h1 th:text="${subject.subjectName} + ' (' + ${subject.subjectCode} + ') — Marks Report'">Subject Report</h1>
+<div class="subtitle">
+    Faculty: <span th:text="${faculty.fullName}">Faculty</span> &middot;
+    Generated: <span th:text="${generatedAt}">date</span>
+</div>
+
+<table>
+    <thead>
+    <tr><th>Register No.</th><th>Student Name</th><th>Internal 1</th><th>Internal 2</th><th>Internal 3</th><th>Semester Exam</th><th>Assignment</th></tr>
+    </thead>
+    <tbody>
+    <tr th:each="row : ${rows}">
+        <td th:text="${row[0].registerNumber}">Reg</td>
+        <td th:text="${row[0].fullName}">Name</td>
+        <td th:text="${row[1].get('INTERNAL1')}">-</td>
+        <td th:text="${row[1].get('INTERNAL2')}">-</td>
+        <td th:text="${row[1].get('INTERNAL3')}">-</td>
+        <td th:text="${row[1].get('SEMESTER')}">-</td>
+        <td th:text="${row[1].get('ASSIGNMENT')}">-</td>
+    </tr>
+    <tr th:if="${#lists.isEmpty(rows)}"><td colspan="7">No students found for this subject's semester.</td></tr>
+    </tbody>
+</table>
+
+</body>
+</html>

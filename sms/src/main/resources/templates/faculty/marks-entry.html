@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marks Entry | CampusERP</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="app-shell">
+    <div th:replace="~{fragments/faculty-sidebar :: sidebar('marks')}"></div>
+    <div class="main-content">
+        <div class="topbar">
+            <h5 th:text="${subject.subjectName} + ' — Marks Entry'">Marks Entry</h5>
+            <a th:href="@{/faculty/marks}" class="btn btn-sm btn-outline-secondary"><i class="fa-solid fa-arrow-left"></i> Back</a>
+        </div>
+        <div class="content-area">
+            <div class="panel mb-3">
+                <form method="get" th:action="@{'/faculty/marks/' + ${subject.subjectId}}" class="row g-3 align-items-end">
+                    <div class="col-md-4">
+                        <label class="form-label">Exam Type</label>
+                        <select name="examType" class="form-select" onchange="this.form.submit()">
+                            <option th:each="et : ${examTypes}" th:value="${et}" th:text="${et}" th:selected="${et == examType}">INTERNAL1</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+
+            <div class="panel">
+                <form th:action="@{'/faculty/marks/' + ${subject.subjectId} + '/save'}" method="post">
+                    <input type="hidden" name="examType" th:value="${examType}">
+                    <div class="row g-3 mb-3 align-items-end">
+                        <div class="col-md-3">
+                            <label class="form-label">Max Marks (for this exam)</label>
+                            <input type="number" name="maxMarks" class="form-control" step="0.01" value="100" required>
+                        </div>
+                    </div>
+                    <table class="table table-hover align-middle">
+                        <thead>
+                        <tr><th>Register No.</th><th>Student Name</th><th style="width:180px;">Marks Obtained</th></tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="row : ${rows}">
+                            <td th:text="${row[0].registerNumber}">Reg</td>
+                            <td th:text="${row[0].fullName}">Name</td>
+                            <td>
+                                <input type="number" step="0.01" min="0"
+                                       th:name="'marks_' + ${row[0].studentId}"
+                                       th:value="${row[1] != null ? row[1].marksObtained : ''}"
+                                       class="form-control form-control-sm" placeholder="Enter marks">
+                            </td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(rows)}">
+                            <td colspan="3" class="text-muted text-center">No students found for this subject's semester.</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <button class="btn btn-primary" type="submit" th:if="${not #lists.isEmpty(rows)}">
+                        <i class="fa-solid fa-floppy-disk"></i> Save Marks
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

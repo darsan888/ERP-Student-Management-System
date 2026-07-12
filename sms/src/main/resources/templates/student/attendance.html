@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attendance | CampusERP</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="app-shell">
+    <div th:replace="~{fragments/student-sidebar :: sidebar('attendance')}"></div>
+    <div class="main-content">
+        <div class="topbar">
+            <h5>My Attendance</h5>
+            <div class="d-flex align-items-center gap-3">
+                <span class="text-muted small" th:text="${student.registerNumber}">REG</span>
+                <form th:action="@{/logout}" method="post" class="mb-0">
+                    <button class="btn btn-sm btn-outline-danger" type="submit"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
+                </form>
+            </div>
+        </div>
+        <div class="content-area">
+            <div class="row g-3 mb-4">
+                <div class="col-md-4">
+                    <div class="stat-card bg-indigo">
+                        <i class="fa-solid fa-calendar-check bg-icon"></i>
+                        <div class="label">Overall Attendance</div>
+                        <h2 th:text="${overallPercentage} + '%'">0%</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="panel">
+                <h6 class="fw-bold mb-3">Subject-wise Attendance</h6>
+                <table class="table table-hover align-middle">
+                    <thead>
+                    <tr>
+                        <th>Subject</th>
+                        <th>Code</th>
+                        <th>Classes Held</th>
+                        <th>Present</th>
+                        <th>Percentage</th>
+                        <th>Status</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="row : ${subjectStats}">
+                        <td th:text="${row[0].subjectName}">Subject</td>
+                        <td th:text="${row[0].subjectCode}">Code</td>
+                        <td th:text="${row[1]}">0</td>
+                        <td th:text="${row[2]}">0</td>
+                        <td th:text="${row[3]} + '%'">0%</td>
+                        <td>
+                            <span class="risk-badge" th:classappend="${row[3] >= 75} ? 'risk-green' : (${row[3] >= 60} ? 'risk-yellow' : 'risk-red')"
+                                  th:text="${row[3] >= 75} ? 'Good' : (${row[3] >= 60} ? 'Warning' : 'Critical')">Good</span>
+                        </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(subjectStats)}">
+                        <td colspan="6" class="text-muted text-center">No attendance records yet.</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

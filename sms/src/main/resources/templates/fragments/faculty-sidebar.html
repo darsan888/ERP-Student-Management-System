@@ -1,0 +1,14 @@
+<div th:fragment="sidebar(active)" class="sidebar" xmlns:th="http://www.thymeleaf.org">
+    <div class="brand"><i class="fa-solid fa-graduation-cap"></i> <span>CampusERP</span></div>
+    <div class="nav flex-column">
+        <div class="nav-section-title">Main</div>
+        <a class="nav-link" th:classappend="${active == 'dashboard'} ? 'active'" th:href="@{/faculty/dashboard}"><i class="fa-solid fa-gauge"></i><span>Dashboard</span></a>
+        <a class="nav-link" th:classappend="${active == 'attendance'} ? 'active'" th:href="@{/faculty/attendance}"><i class="fa-solid fa-clipboard-check"></i><span>Take Attendance</span></a>
+        <a class="nav-link" th:classappend="${active == 'marks'} ? 'active'" th:href="@{/faculty/marks}"><i class="fa-solid fa-chart-simple"></i><span>Marks Entry</span></a>
+        <a class="nav-link" th:classappend="${active == 'assignments'} ? 'active'" th:href="@{/faculty/assignments}"><i class="fa-solid fa-file-arrow-up"></i><span>Assignments</span></a>
+        <a class="nav-link" th:classappend="${active == 'leaves'} ? 'active'" th:href="@{/faculty/leaves}"><i class="fa-solid fa-envelope-open-text"></i><span>Leave Approvals</span></a>
+        <div class="nav-section-title">Insights</div>
+        <a class="nav-link" th:classappend="${active == 'reports'} ? 'active'" th:href="@{/faculty/reports}"><i class="fa-solid fa-file-lines"></i><span>Reports</span></a>
+        <a class="nav-link" th:classappend="${active == 'notifications'} ? 'active'" th:href="@{/faculty/notifications}"><i class="fa-solid fa-bell"></i><span>Notifications</span></a>
+    </div>
+</div>

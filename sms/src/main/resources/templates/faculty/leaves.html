@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leave Approvals | CampusERP</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="app-shell">
+    <div th:replace="~{fragments/faculty-sidebar :: sidebar('leaves')}"></div>
+    <div class="main-content">
+        <div class="topbar">
+            <h5>Leave Approvals</h5>
+            <form th:action="@{/logout}" method="post" class="mb-0">
+                <button class="btn btn-sm btn-outline-danger" type="submit"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
+            </form>
+        </div>
+        <div class="content-area">
+            <div class="panel">
+                <h6 class="fw-bold mb-3">Leave Requests Routed to Me</h6>
+                <p class="text-muted small">Students choose you as their approving faculty when applying for leave. You can approve or reject here — or, if an admin decides it first, the status updates automatically.</p>
+                <table class="table table-hover align-middle">
+                    <thead><tr><th>Student</th><th>Reason</th><th>From</th><th>To</th><th>Status</th><th>Action</th></tr></thead>
+                    <tbody>
+                    <tr th:each="l : ${leaveRequests}">
+                        <td th:text="${l.student != null ? l.student.fullName : '-'}">Student</td>
+                        <td th:text="${l.reason}">Reason</td>
+                        <td th:text="${l.fromDate}">-</td>
+                        <td th:text="${l.toDate}">-</td>
+                        <td>
+                            <span class="badge"
+                                  th:classappend="${l.status.name() == 'APPROVED'} ? 'bg-success' : (${l.status.name() == 'REJECTED'} ? 'bg-danger' : 'bg-warning text-dark')"
+                                  th:text="${l.status}">PENDING</span>
+                            <div class="text-muted small mt-1" th:if="${l.remarks != null and l.status.name() != 'PENDING'}" th:text="${l.remarks}">remarks</div>
+                        </td>
+                        <td>
+                            <div th:if="${l.status.name() == 'PENDING'}" class="d-flex gap-2">
+                                <form th:action="@{'/faculty/leaves/' + ${l.leaveId} + '/approve'}" method="post" class="d-flex gap-1">
+                                    <input type="text" name="remarks" class="form-control form-control-sm" placeholder="Remarks (optional)" style="width:150px;">
+                                    <button class="btn btn-sm btn-success" type="submit"><i class="fa-solid fa-check"></i></button>
+                                </form>
+                                <form th:action="@{'/faculty/leaves/' + ${l.leaveId} + '/reject'}" method="post">
+                                    <button class="btn btn-sm btn-danger" type="submit"><i class="fa-solid fa-xmark"></i></button>
+                                </form>
+                            </div>
+                            <span th:if="${l.status.name() != 'PENDING'}" class="text-muted small" th:text="${l.decidedAt}">decided</span>
+                        </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(leaveRequests)}">
+                        <td colspan="6" class="text-muted text-center">No leave requests routed to you yet.</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytics | CampusERP</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="app-shell">
+    <div th:replace="~{fragments/admin-sidebar :: sidebar('analytics')}"></div>
+    <div class="main-content">
+        <div class="topbar">
+            <h5>Analytics</h5>
+            <form th:action="@{/logout}" method="post" class="mb-0">
+                <button class="btn btn-sm btn-outline-danger" type="submit"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
+            </form>
+        </div>
+        <div class="content-area">
+            <div class="row g-3 mb-4">
+                <div class="col-md-3">
+                    <div class="stat-card bg-indigo">
+                        <i class="fa-solid fa-user-graduate bg-icon"></i>
+                        <div class="label">Total Students</div>
+                        <h2 th:text="${totalStudents}">0</h2>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-card bg-green">
+                        <i class="fa-solid fa-chalkboard-user bg-icon"></i>
+                        <div class="label">Total Faculty</div>
+                        <h2 th:text="${totalFaculty}">0</h2>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-card bg-amber">
+                        <i class="fa-solid fa-building bg-icon"></i>
+                        <div class="label">Departments</div>
+                        <h2 th:text="${totalDepartments}">0</h2>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-card bg-sky">
+                        <i class="fa-solid fa-layer-group bg-icon"></i>
+                        <div class="label">Subjects</div>
+                        <h2 th:text="${totalSubjects}">0</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="panel">
+                <h6 class="fw-bold mb-3">Overview</h6>
+                <p>Total subjects offered: <strong th:text="${totalSubjects}">0</strong></p>
+                <p class="text-muted small">Deeper charts and trend analysis coming soon.</p>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

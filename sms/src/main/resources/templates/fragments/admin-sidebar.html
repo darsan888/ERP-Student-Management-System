@@ -1,0 +1,20 @@
+<div th:fragment="sidebar(active)" class="sidebar" xmlns:th="http://www.thymeleaf.org">
+    <div class="brand"><i class="fa-solid fa-graduation-cap"></i> <span>CampusERP</span></div>
+    <div class="nav flex-column">
+        <div class="nav-section-title">Main</div>
+        <a class="nav-link" th:classappend="${active == 'dashboard'} ? 'active'" th:href="@{/admin/dashboard}"><i class="fa-solid fa-gauge"></i><span>Dashboard</span></a>
+        <div class="nav-section-title">Academics</div>
+        <a class="nav-link" th:classappend="${active == 'departments'} ? 'active'" th:href="@{/admin/departments}"><i class="fa-solid fa-building"></i><span>Departments</span></a>
+        <a class="nav-link" th:classappend="${active == 'subjects'} ? 'active'" th:href="@{/admin/subjects}"><i class="fa-solid fa-layer-group"></i><span>Subjects</span></a>
+        <a class="nav-link" th:classappend="${active == 'faculty'} ? 'active'" th:href="@{/admin/faculty}"><i class="fa-solid fa-chalkboard-user"></i><span>Faculty</span></a>
+        <a class="nav-link" th:classappend="${active == 'students'} ? 'active'" th:href="@{/admin/students}"><i class="fa-solid fa-user-graduate"></i><span>Students</span></a>
+        <a class="nav-link" th:classappend="${active == 'attendance'} ? 'active'" th:href="@{/admin/attendance}"><i class="fa-solid fa-calendar-check"></i><span>Attendance</span></a>
+        <a class="nav-link" th:classappend="${active == 'calendar'} ? 'active'" th:href="@{/admin/calendar}"><i class="fa-solid fa-calendar-days"></i><span>Academic Calendar</span></a>
+        <div class="nav-section-title">Insights</div>
+        <a class="nav-link" th:classappend="${active == 'analytics'} ? 'active'" th:href="@{/admin/analytics}"><i class="fa-solid fa-chart-line"></i><span>Analytics</span></a>
+        <a class="nav-link" th:classappend="${active == 'reports'} ? 'active'" th:href="@{/admin/reports}"><i class="fa-solid fa-file-lines"></i><span>Reports</span></a>
+        <a class="nav-link" th:classappend="${active == 'leaves'} ? 'active'" th:href="@{/admin/leaves}"><i class="fa-solid fa-envelope-open-text"></i><span>Leave Requests</span></a>
+        <a class="nav-link" th:classappend="${active == 'notifications'} ? 'active'" th:href="@{/admin/notifications}"><i class="fa-solid fa-bell"></i><span>Notification Center</span></a>
+        <a class="nav-link" th:classappend="${active == 'settings'} ? 'active'" th:href="@{/admin/settings}"><i class="fa-solid fa-gear"></i><span>Settings</span></a>
+    </div>
+</div>

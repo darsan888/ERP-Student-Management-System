@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faculty | CampusERP</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="app-shell">
+    <div th:replace="~{fragments/admin-sidebar :: sidebar('faculty')}"></div>
+    <div class="main-content">
+        <div class="topbar">
+            <h5>Faculty</h5>
+            <form th:action="@{/logout}" method="post" class="mb-0">
+                <button class="btn btn-sm btn-outline-danger" type="submit"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
+            </form>
+        </div>
+        <div class="content-area">
+            <div class="alert alert-success" th:if="${success}" th:text="${success}">Success</div>
+            <div class="alert alert-danger" th:if="${error}" th:text="${error}">Error</div>
+            <div class="panel mb-4">
+                <h6 class="fw-bold mb-3">Add Faculty</h6>
+                <p class="text-muted small">This creates both the faculty profile and their individual login account (email + password) so they can sign in to the Faculty Portal.</p>
+                <form th:action="@{/admin/faculty/add}" method="post" class="row g-3">
+                    <div class="col-md-3">
+                        <label class="form-label">Full Name</label>
+                        <input type="text" name="fullName" class="form-control" required>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">Employee Code</label>
+                        <input type="text" name="employeeCode" class="form-control" required>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Department</label>
+                        <select name="departmentId" class="form-select" required>
+                            <option th:each="d : ${departments}" th:value="${d.departmentId}" th:text="${d.departmentName}">Dept</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">Designation</label>
+                        <input type="text" name="designation" class="form-control" placeholder="Assistant Professor">
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">Phone</label>
+                        <input type="text" name="phone" class="form-control">
+                    </div>
+                    <div class="col-12"><hr class="my-1"><span class="text-muted small">Login credentials</span></div>
+                    <div class="col-md-3">
+                        <label class="form-label">Username</label>
+                        <input type="text" name="username" class="form-control" required>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Email</label>
+                        <input type="email" name="email" class="form-control" required>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Password</label>
+                        <input type="password" name="password" class="form-control" required>
+                    </div>
+                    <div class="col-md-3 d-flex align-items-end">
+                        <button class="btn btn-primary w-100" type="submit"><i class="fa-solid fa-plus"></i> Add Faculty</button>
+                    </div>
+                </form>
+            </div>
+            <div class="panel mb-4">
+                <h6 class="fw-bold mb-3">Assign Subject to Faculty</h6>
+                <p class="text-muted small">Choose which subject a faculty member teaches. They'll then see it under "Marks Entry" and "Assignments" in their own portal.</p>
+                <form th:action="@{/admin/faculty/assign-subject}" method="post" class="row g-3">
+                    <div class="col-md-5">
+                        <label class="form-label">Faculty</label>
+                        <select name="facultyId" class="form-select" required>
+                            <option th:each="f : ${facultyList}" th:value="${f.facultyId}" th:text="${f.fullName} + ' (' + ${f.employeeCode} + ')'">Faculty</option>
+                        </select>
+                    </div>
+                    <div class="col-md-5">
+                        <label class="form-label">Subject</label>
+                        <select name="subjectId" class="form-select" required>
+                            <option th:each="s : ${subjects}" th:value="${s.subjectId}" th:text="${s.subjectName} + ' (' + ${s.subjectCode} + ')'">Subject</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2 d-flex align-items-end">
+                        <button class="btn btn-primary w-100" type="submit"><i class="fa-solid fa-link"></i> Assign</button>
+                    </div>
+                </form>
+                <p class="text-muted small mb-0" th:if="${#lists.isEmpty(subjects)}">No subjects exist yet — add subjects first.</p>
+
+                <hr>
+                <h6 class="fw-bold mb-3">Current Assignments</h6>
+                <table class="table table-sm align-middle">
+                    <thead><tr><th>Faculty</th><th>Subject</th><th></th></tr></thead>
+                    <tbody>
+                    <tr th:each="a : ${assignments}">
+                        <td th:text="${a.faculty.fullName}">Faculty</td>
+                        <td th:text="${a.subject.subjectName} + ' (' + ${a.subject.subjectCode} + ')'">Subject</td>
+                        <td class="text-end">
+                            <form th:action="@{/admin/faculty/unassign-subject}" method="post" class="mb-0">
+                                <input type="hidden" name="facultySubjectId" th:value="${a.facultySubjectId}">
+                                <button class="btn btn-sm btn-outline-danger" type="submit"><i class="fa-solid fa-xmark"></i> Remove</button>
+                            </form>
+                        </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(assignments)}">
+                        <td colspan="3" class="text-muted text-center">No subjects assigned yet.</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="panel">
+                <h6 class="fw-bold mb-3">All Faculty</h6>
+                <table class="table table-hover align-middle">
+                    <thead><tr><th>Name</th><th>Employee Code</th><th>Department</th><th>Designation</th><th>Phone</th></tr></thead>
+                    <tbody>
+                    <tr th:each="f : ${facultyList}">
+                        <td th:text="${f.fullName}">Name</td>
+                        <td th:text="${f.employeeCode}">Code</td>
+                        <td th:text="${f.department != null ? f.department.departmentName : '-'}">Dept</td>
+                        <td th:text="${f.designation} ?: '-'">Designation</td>
+                        <td th:text="${f.phone} ?: '-'">Phone</td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(facultyList)}">
+                        <td colspan="5" class="text-muted text-center">No faculty found.</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

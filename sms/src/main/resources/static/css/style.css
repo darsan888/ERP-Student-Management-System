@@ -1,0 +1,141 @@
+:root {
+    --primary: #4f46e5;
+    --primary-dark: #4338ca;
+    --sidebar-bg: #111827;
+    --sidebar-hover: #1f2937;
+    --success: #16a34a;
+    --warning: #eab308;
+    --danger: #dc2626;
+    --card-radius: 14px;
+}
+
+body {
+    background: #f4f6fb;
+    font-family: 'Segoe UI', Roboto, sans-serif;
+}
+
+/* ---------------- Login Page ---------------- */
+.login-body {
+    background: linear-gradient(135deg, #4f46e5 0%, #4338ca 60%, #312e81 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.login-wrapper { width: 100%; max-width: 420px; padding: 20px; }
+.login-card {
+    background: #fff;
+    border-radius: 18px;
+    padding: 40px 36px;
+}
+.login-brand { text-align: center; margin-bottom: 24px; }
+.login-brand i { font-size: 42px; color: var(--primary); }
+.login-brand h3 { margin-top: 8px; font-weight: 700; }
+.login-brand h3 span { color: var(--primary); }
+.login-demo-creds {
+    background: #f8f9fc;
+    border-radius: 10px;
+    padding: 12px 16px;
+}
+
+/* ---------------- App Shell ---------------- */
+.app-shell { display: flex; min-height: 100vh; }
+
+.sidebar {
+    width: 260px;
+    background: var(--sidebar-bg);
+    color: #e5e7eb;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    transition: width .2s ease;
+}
+.sidebar .brand {
+    padding: 22px 20px;
+    font-size: 20px;
+    font-weight: 700;
+    border-bottom: 1px solid #1f2937;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.sidebar .brand i { color: var(--primary); }
+.sidebar .nav-link {
+    color: #cbd5e1;
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-left: 3px solid transparent;
+}
+.sidebar .nav-link i { width: 18px; text-align: center; }
+.sidebar .nav-link:hover, .sidebar .nav-link.active {
+    background: var(--sidebar-hover);
+    color: #fff;
+    border-left-color: var(--primary);
+}
+.sidebar .nav-section-title {
+    text-transform: uppercase;
+    font-size: 11px;
+    letter-spacing: .08em;
+    color: #6b7280;
+    padding: 16px 20px 6px;
+}
+
+.main-content { flex: 1; min-width: 0; }
+
+.topbar {
+    background: #fff;
+    padding: 14px 28px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 1px 3px rgba(0,0,0,.05);
+}
+.topbar h5 { margin: 0; font-weight: 600; }
+
+.content-area { padding: 26px; }
+
+/* ---------------- Cards / Widgets ---------------- */
+.stat-card {
+    border: none;
+    border-radius: var(--card-radius);
+    padding: 22px;
+    color: #fff;
+    position: relative;
+    overflow: hidden;
+}
+.stat-card i.bg-icon {
+    position: absolute;
+    right: 14px;
+    top: 14px;
+    font-size: 42px;
+    opacity: .25;
+}
+.stat-card h2 { font-weight: 700; margin: 6px 0 0; }
+.stat-card .label { font-size: 13px; opacity: .9; text-transform: uppercase; letter-spacing: .04em; }
+
+.stat-card.bg-indigo { background: linear-gradient(135deg,#6366f1,#4338ca); }
+.stat-card.bg-green  { background: linear-gradient(135deg,#22c55e,#15803d); }
+.stat-card.bg-amber  { background: linear-gradient(135deg,#f59e0b,#b45309); }
+.stat-card.bg-rose   { background: linear-gradient(135deg,#f43f5e,#be123c); }
+.stat-card.bg-sky    { background: linear-gradient(135deg,#0ea5e9,#0369a1); }
+
+.panel {
+    background: #fff;
+    border-radius: var(--card-radius);
+    padding: 22px;
+    box-shadow: 0 1px 3px rgba(0,0,0,.06);
+}
+
+.risk-badge { padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+.risk-green  { background: #dcfce7; color: #15803d; }
+.risk-yellow { background: #fef9c3; color: #a16207; }
+.risk-red    { background: #fee2e2; color: #b91c1c; }
+
+.progress { height: 8px; border-radius: 6px; }
+
+@media (max-width: 900px) {
+    .sidebar { width: 72px; }
+    .sidebar .brand span, .sidebar .nav-link span { display: none; }
+}

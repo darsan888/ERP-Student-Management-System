@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timetable | CampusERP</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="app-shell">
+    <div th:replace="~{fragments/student-sidebar :: sidebar('timetable')}"></div>
+    <div class="main-content">
+        <div class="topbar">
+            <h5>Weekly Timetable</h5>
+            <div class="d-flex align-items-center gap-3">
+                <span class="text-muted small" th:text="${student.registerNumber}">REG</span>
+                <form th:action="@{/logout}" method="post" class="mb-0">
+                    <button class="btn btn-sm btn-outline-danger" type="submit"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
+                </form>
+            </div>
+        </div>
+        <div class="content-area">
+            <div class="panel" th:each="day : ${days}" style="margin-bottom: 16px;">
+                <h6 class="fw-bold mb-3" th:text="${day}">MONDAY</h6>
+                <table class="table table-sm align-middle">
+                    <thead>
+                    <tr>
+                        <th>Time</th>
+                        <th>Subject</th>
+                        <th>Faculty</th>
+                        <th>Room</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="e : ${entries}" th:if="${e.dayOfWeek == day}">
+                        <td th:text="${e.startTime} + ' - ' + ${e.endTime}">09:00 - 10:00</td>
+                        <td th:text="${e.subject.subjectName}">Subject</td>
+                        <td th:text="${e.faculty.fullName}">Faculty</td>
+                        <td th:text="${e.roomNumber} ?: '-'">Room</td>
+                    </tr>
+                    </tbody>
+                </table>
+                <p class="text-muted small mb-0"
+                   th:if="${entries.?[dayOfWeek == day].isEmpty()}">No classes scheduled.</p>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

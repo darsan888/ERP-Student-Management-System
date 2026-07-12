@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assignments | CampusERP</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="app-shell">
+    <div th:replace="~{fragments/student-sidebar :: sidebar('assignments')}"></div>
+    <div class="main-content">
+        <div class="topbar">
+            <h5>Assignments</h5>
+            <div class="d-flex align-items-center gap-3">
+                <span class="text-muted small" th:text="${student.registerNumber}">REG</span>
+                <form th:action="@{/logout}" method="post" class="mb-0">
+                    <button class="btn btn-sm btn-outline-danger" type="submit"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
+                </form>
+            </div>
+        </div>
+        <div class="content-area">
+            <div class="panel">
+                <h6 class="fw-bold mb-3">My Assignments</h6>
+                <table class="table table-hover align-middle">
+                    <thead>
+                    <tr>
+                        <th>Subject</th>
+                        <th>Title</th>
+                        <th>Due Date</th>
+                        <th>Status</th>
+                        <th>Submit</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="row : ${rows}">
+                        <td th:text="${row[0].subject.subjectName}">Subject</td>
+                        <td th:text="${row[0].title}">Title</td>
+                        <td th:text="${row[0].dueDate}">-</td>
+                        <td>
+                            <span th:if="${row[1] == null}" class="badge bg-secondary">Not Submitted</span>
+                            <span th:if="${row[1] != null}" class="badge bg-success" th:text="${row[1].status}">SUBMITTED</span>
+                        </td>
+                        <td>
+                            <form th:if="${row[1] == null}" th:action="@{'/student/assignments/' + ${row[0].assignmentId} + '/submit'}" method="post" class="d-flex gap-2">
+                                <input type="text" name="fileUrl" class="form-control form-control-sm" placeholder="Paste file link / URL" required>
+                                <button class="btn btn-sm btn-primary" type="submit">Submit</button>
+                            </form>
+                            <span th:if="${row[1] != null}" class="text-muted small" th:text="${row[1].submittedAt}">submitted</span>
+                        </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(rows)}">
+                        <td colspan="5" class="text-muted text-center">No assignments yet.</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

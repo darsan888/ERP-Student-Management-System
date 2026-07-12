@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attendance | CampusERP</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="app-shell">
+    <div th:replace="~{fragments/admin-sidebar :: sidebar('attendance')}"></div>
+    <div class="main-content">
+        <div class="topbar">
+            <h5>Attendance Overview</h5>
+            <form th:action="@{/logout}" method="post" class="mb-0">
+                <button class="btn btn-sm btn-outline-danger" type="submit"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
+            </form>
+        </div>
+        <div class="content-area">
+            <div class="panel mb-4">
+                <h6 class="fw-bold mb-3">Select Subject &amp; Date</h6>
+                <p class="text-muted small">This view is read-only — attendance is marked by faculty from their portal. Use this to check who was present or absent on a given day.</p>
+                <form method="get" th:action="@{/admin/attendance}" class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Subject</label>
+                        <select name="subjectId" class="form-select" required>
+                            <option value="">-- Select subject --</option>
+                            <option th:each="s : ${subjects}" th:value="${s.subjectId}" th:text="${s.subjectName} + ' (' + ${s.subjectCode} + ')'"
+                                    th:selected="${selectedSubjectId != null and selectedSubjectId == s.subjectId}">Subject</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Date</label>
+                        <input type="date" name="date" class="form-control" th:value="${selectedDate}" required>
+                    </div>
+                    <div class="col-md-2 d-flex align-items-end">
+                        <button class="btn btn-primary w-100" type="submit"><i class="fa-solid fa-magnifying-glass"></i> View</button>
+                    </div>
+                </form>
+            </div>
+
+            <div th:if="${subject != null}">
+                <div class="row g-3 mb-4">
+                    <div class="col-md-4">
+                        <div class="stat-card bg-green">
+                            <i class="fa-solid fa-check bg-icon"></i>
+                            <div class="label">Present</div>
+                            <h2 th:text="${presentCount}">0</h2>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="stat-card bg-rose">
+                            <i class="fa-solid fa-xmark bg-icon"></i>
+                            <div class="label">Absent</div>
+                            <h2 th:text="${absentCount}">0</h2>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="stat-card bg-amber">
+                            <i class="fa-solid fa-clock bg-icon"></i>
+                            <div class="label">Late</div>
+                            <h2 th:text="${lateCount}">0</h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel">
+                    <h6 class="fw-bold mb-3" th:text="${subject.subjectName} + ' — ' + ${selectedDate}">Subject — Date</h6>
+                    <table class="table table-hover align-middle">
+                        <thead><tr><th>Register No.</th><th>Student Name</th><th>Status</th></tr></thead>
+                        <tbody>
+                        <tr th:each="a : ${records}">
+                            <td th:text="${a.student.registerNumber}">Reg</td>
+                            <td th:text="${a.student.fullName}">Name</td>
+                            <td>
+                                <span class="badge"
+                                      th:classappend="${a.status.name() == 'PRESENT'} ? 'bg-success' : (${a.status.name() == 'LATE'} ? 'bg-warning text-dark' : 'bg-danger')"
+                                      th:text="${a.status}">PRESENT</span>
+                            </td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(records)}">
+                            <td colspan="3" class="text-muted text-center">No attendance marked for this subject on this date yet.</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

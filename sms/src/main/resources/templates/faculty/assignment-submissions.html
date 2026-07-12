@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assignment Submissions | CampusERP</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="app-shell">
+    <div th:replace="~{fragments/faculty-sidebar :: sidebar('assignments')}"></div>
+    <div class="main-content">
+        <div class="topbar">
+            <h5>Submissions — <span th:text="${assignment.title}">Assignment</span></h5>
+            <form th:action="@{/logout}" method="post" class="mb-0">
+                <button class="btn btn-sm btn-outline-danger" type="submit"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
+            </form>
+        </div>
+        <div class="content-area">
+            <a class="btn btn-sm btn-outline-secondary mb-3" th:href="@{/faculty/assignments}"><i class="fa-solid fa-arrow-left"></i> Back to Assignments</a>
+
+            <div class="panel mb-4">
+                <div class="row">
+                    <div class="col-md-3"><strong>Subject:</strong> <span th:text="${assignment.subject.subjectName}"></span></div>
+                    <div class="col-md-3"><strong>Due Date:</strong> <span th:text="${assignment.dueDate}"></span></div>
+                    <div class="col-md-3"><strong>Max Marks:</strong> <span th:text="${assignment.maxMarks}"></span></div>
+                    <div class="col-md-3"><strong>Submitted:</strong> <span th:text="${submittedCount} + ' / ' + ${totalCount}"></span></div>
+                </div>
+            </div>
+
+            <div class="panel mb-4">
+                <h6 class="fw-bold mb-3">Students Who Submitted</h6>
+                <table class="table table-hover align-middle">
+                    <thead><tr><th>Name</th><th>Register No</th><th>Submitted At</th><th>Status</th><th>File</th></tr></thead>
+                    <tbody>
+                    <tr th:each="sub : ${submissions}">
+                        <td th:text="${sub.student.fullName}">Name</td>
+                        <td th:text="${sub.student.registerNumber}">Reg</td>
+                        <td th:text="${sub.submittedAt}">-</td>
+                        <td><span class="badge bg-success" th:text="${sub.status}">SUBMITTED</span></td>
+                        <td>
+                            <a th:if="${sub.fileUrl != null and !sub.fileUrl.isEmpty()}" th:href="${sub.fileUrl}" target="_blank">
+                                <i class="fa-solid fa-paperclip"></i> View
+                            </a>
+                            <span th:unless="${sub.fileUrl != null and !sub.fileUrl.isEmpty()}" class="text-muted">-</span>
+                        </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(submissions)}">
+                        <td colspan="5" class="text-muted text-center">No submissions yet.</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="panel">
+                <h6 class="fw-bold mb-3">Not Yet Submitted</h6>
+                <table class="table table-hover align-middle">
+                    <thead><tr><th>Name</th><th>Register No</th></tr></thead>
+                    <tbody>
+                    <tr th:each="s : ${notSubmitted}">
+                        <td th:text="${s.fullName}">Name</td>
+                        <td th:text="${s.registerNumber}">Reg</td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(notSubmitted)}">
+                        <td colspan="2" class="text-muted text-center">Everyone has submitted.</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

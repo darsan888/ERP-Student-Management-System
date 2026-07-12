@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | CampusERP</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="app-shell">
+    <!-- Sidebar -->
+    <div th:replace="~{fragments/admin-sidebar :: sidebar('dashboard')}"></div>
+
+    <!-- Main -->
+    <div class="main-content">
+        <div class="topbar">
+            <h5>Super Admin Dashboard</h5>
+            <div class="d-flex align-items-center gap-3">
+                <span class="text-muted small" sec:authentication="name">admin</span>
+                <form th:action="@{/logout}" method="post" class="mb-0">
+                    <button class="btn btn-sm btn-outline-danger" type="submit">
+                        <i class="fa-solid fa-right-from-bracket"></i> Logout
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <div class="content-area">
+            <div class="row g-3 mb-4">
+                <div class="col-md-3">
+                    <div class="stat-card bg-indigo">
+                        <i class="fa-solid fa-user-graduate bg-icon"></i>
+                        <div class="label">Total Students</div>
+                        <h2 th:text="${totalStudents}">0</h2>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-card bg-green">
+                        <i class="fa-solid fa-chalkboard-user bg-icon"></i>
+                        <div class="label">Total Faculty</div>
+                        <h2 th:text="${totalFaculty}">0</h2>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-card bg-amber">
+                        <i class="fa-solid fa-building bg-icon"></i>
+                        <div class="label">Departments</div>
+                        <h2 th:text="${totalDepartments}">0</h2>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-card bg-rose">
+                        <i class="fa-solid fa-envelope-open-text bg-icon"></i>
+                        <div class="label">Pending Leaves</div>
+                        <h2 th:text="${pendingLeaves}">0</h2>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row g-3">
+                <div class="col-md-7">
+                    <div class="panel">
+                        <h6 class="fw-bold mb-3">Semester-wise Average Performance</h6>
+                        <canvas id="perfChart" height="130"></canvas>
+                    </div>
+                </div>
+                <div class="col-md-5">
+                    <div class="panel">
+                        <h6 class="fw-bold mb-3">Recent Notifications</h6>
+                        <ul class="list-unstyled mb-0">
+                            <li class="mb-3" th:each="n : ${recentNotifications}">
+                                <div class="fw-semibold small" th:text="${n.title}">Title</div>
+                                <div class="text-muted small" th:text="${n.message}">Message</div>
+                            </li>
+                            <li th:if="${#lists.isEmpty(recentNotifications)}" class="text-muted small">
+                                No notifications yet.
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.4/chart.umd.min.js"></script>
+<script>
+    const ctx = document.getElementById('perfChart');
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['Sem 1', 'Sem 2', 'Sem 3', 'Sem 4', 'Sem 5', 'Sem 6'],
+            datasets: [{
+                label: 'Average Marks (%)',
+                data: [72, 75, 78, 74, 80, 82],
+                backgroundColor: '#4f46e5',
+                borderRadius: 6
+            }]
+        },
+        options: { responsive: true, plugins: { legend: { display: false } } }
+    });
+</script>
+</body>
+</html>

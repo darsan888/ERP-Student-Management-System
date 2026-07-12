@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marks Entry | CampusERP</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="app-shell">
+    <div th:replace="~{fragments/faculty-sidebar :: sidebar('marks')}"></div>
+    <div class="main-content">
+        <div class="topbar">
+            <h5>Marks Entry</h5>
+            <form th:action="@{/logout}" method="post" class="mb-0">
+                <button class="btn btn-sm btn-outline-danger" type="submit"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
+            </form>
+        </div>
+        <div class="content-area">
+            <div class="panel">
+                <h6 class="fw-bold mb-3">My Subjects</h6>
+                <p class="text-muted">Select a subject to enter or review marks for your students.</p>
+                <div class="list-group">
+                    <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
+                       th:each="fs : ${assignedSubjects}" th:href="@{'/faculty/marks/' + ${fs.subject.subjectId}}">
+                        <span th:text="${fs.subject.subjectName} + ' (' + ${fs.subject.subjectCode} + ')'">Subject</span>
+                        <span class="badge bg-primary" th:text="${fs.subject.credits} + ' credits'">3 credits</span>
+                    </a>
+                    <div class="list-group-item text-muted text-center" th:if="${#lists.isEmpty(assignedSubjects)}">
+                        No subjects assigned yet. Ask an admin to assign a subject to you under Admin &rarr; Faculty.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

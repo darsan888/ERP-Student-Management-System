@@ -1,0 +1,14 @@
+<div th:fragment="sidebar(active)" class="sidebar" xmlns:th="http://www.thymeleaf.org">
+    <div class="brand"><i class="fa-solid fa-graduation-cap"></i> <span>CampusERP</span></div>
+    <div class="nav flex-column">
+        <div class="nav-section-title">Main</div>
+        <a class="nav-link" th:classappend="${active == 'dashboard'} ? 'active'" th:href="@{/student/dashboard}"><i class="fa-solid fa-gauge"></i><span>Dashboard</span></a>
+        <a class="nav-link" th:classappend="${active == 'attendance'} ? 'active'" th:href="@{/student/attendance}"><i class="fa-solid fa-calendar-check"></i><span>Attendance</span></a>
+        <a class="nav-link" th:classappend="${active == 'marks'} ? 'active'" th:href="@{/student/marks}"><i class="fa-solid fa-chart-simple"></i><span>Marks &amp; GPA</span></a>
+        <a class="nav-link" th:classappend="${active == 'assignments'} ? 'active'" th:href="@{/student/assignments}"><i class="fa-solid fa-file-arrow-up"></i><span>Assignments</span></a>
+        <a class="nav-link" th:classappend="${active == 'leaves'} ? 'active'" th:href="@{/student/leaves}"><i class="fa-solid fa-envelope"></i><span>Apply Leave</span></a>
+        <a class="nav-link" th:classappend="${active == 'fees'} ? 'active'" th:href="@{/student/fees}"><i class="fa-solid fa-file-invoice-dollar"></i><span>Fee Receipt</span></a>
+        <a class="nav-link" th:classappend="${active == 'notifications'} ? 'active'" th:href="@{/student/notifications}"><i class="fa-solid fa-bell"></i><span>Notifications</span></a>
+        <a class="nav-link" th:classappend="${active == 'profile'} ? 'active'" th:href="@{/student/profile}"><i class="fa-solid fa-user"></i><span>Profile</span></a>
+    </div>
+</div>
