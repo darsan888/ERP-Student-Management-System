@@ -19,7 +19,35 @@ SMS (Student Management System) is an ERP-based web application developed using 
 - [License](#license)
 
 ---
+# 📸 Screenshots
 
+## 🔐 Login Page
+
+![Login Page](screenshots/login.png)
+
+---
+
+## 🛠️ Admin Dashboard
+
+![Admin Dashboard](screenshots/admin-dashboard.png)
+
+---
+
+## 👨‍🏫 Faculty Dashboard
+
+![Faculty Dashboard](screenshots/faculty-dashboard.png)
+
+---
+
+## 🎓 Student Dashboard
+
+![Student Dashboard](screenshots/student-dashboard.png)
+
+---
+
+## 📋 Student Management
+
+![Student Management](screenshots/student-management.png)
 # Features
 
 ## Authentication & Authorization
